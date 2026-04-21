@@ -1,0 +1,26 @@
+pub mod lifecycle;
+
+pub struct Engine {
+    running: bool,
+    lifecycle: lifecycle::LifecycleManager
+}
+
+impl Engine {
+    pub fn new(lifecycle_callbacks: lifecycle::LifecycleCallbacks) -> Self {
+        Self {
+            running:  false,
+            lifecycle: lifecycle::LifecycleManager::new(lifecycle_callbacks)
+        }
+    }
+
+    pub fn run(&mut self) {
+        self.running = true;
+        self.lifecycle.invoke_awake();
+        self.lifecycle.invoke_start();
+
+        while self.running {
+            self.lifecycle.invoke_update();
+        }
+    }
+}
+

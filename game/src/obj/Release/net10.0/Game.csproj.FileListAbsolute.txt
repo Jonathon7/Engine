@@ -1,0 +1,11 @@
+C:\Users\Jonathon\Documents\Engine\game\src\bin\Release\net10.0\Game.deps.json
+C:\Users\Jonathon\Documents\Engine\game\src\bin\Release\net10.0\Game.dll
+C:\Users\Jonathon\Documents\Engine\game\src\bin\Release\net10.0\Game.pdb
+C:\Users\Jonathon\Documents\Engine\game\src\obj\Release\net10.0\Game.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Jonathon\Documents\Engine\game\src\obj\Release\net10.0\Game.AssemblyInfoInputs.cache
+C:\Users\Jonathon\Documents\Engine\game\src\obj\Release\net10.0\Game.AssemblyInfo.cs
+C:\Users\Jonathon\Documents\Engine\game\src\obj\Release\net10.0\Game.csproj.CoreCompileInputs.cache
+C:\Users\Jonathon\Documents\Engine\game\src\obj\Release\net10.0\Game.dll
+C:\Users\Jonathon\Documents\Engine\game\src\obj\Release\net10.0\refint\Game.dll
+C:\Users\Jonathon\Documents\Engine\game\src\obj\Release\net10.0\Game.pdb
+C:\Users\Jonathon\Documents\Engine\game\src\obj\Release\net10.0\ref\Game.dll
