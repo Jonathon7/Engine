@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Jonathon\\Documents\\Engine\\game\\src\\Game.csproj": {}
+    "C:\\Users\\jflores\\Documents\\Engine\\game\\src\\Game.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Jonathon\\Documents\\Engine\\game\\src\\Game.csproj": {
+    "C:\\Users\\jflores\\Documents\\Engine\\game\\src\\Game.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Jonathon\\Documents\\Engine\\game\\src\\Game.csproj",
+        "projectUniqueName": "C:\\Users\\jflores\\Documents\\Engine\\game\\src\\Game.csproj",
         "projectName": "Game",
-        "projectPath": "C:\\Users\\Jonathon\\Documents\\Engine\\game\\src\\Game.csproj",
-        "packagesPath": "C:\\Users\\Jonathon\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Jonathon\\Documents\\Engine\\game\\src\\obj\\",
+        "projectPath": "C:\\Users\\jflores\\Documents\\Engine\\game\\src\\Game.csproj",
+        "packagesPath": "C:\\Users\\jflores\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\jflores\\Documents\\Engine\\game\\src\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Jonathon\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\jflores\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -25,7 +25,6 @@
           "net10.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -65,7 +64,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.107/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",

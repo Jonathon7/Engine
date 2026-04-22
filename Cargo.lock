@@ -342,6 +342,7 @@ version = "0.1.0"
 dependencies = [
  "libloading",
  "netcorehost",
+ "sdl3",
 ]
 
 [[package]]
@@ -984,6 +985,23 @@ name = "rustversion"
 version = "1.0.22"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b39cdef0fa800fc44525c84ccb54a029961a8215f9619753635a9c0d2538d46d"
+
+[[package]]
+name = "sdl3"
+version = "0.18.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "96e613fca5924ccab8ab8369ab292a1b4720b125e98007fbda163f4ce7176472"
+dependencies = [
+ "bitflags",
+ "libc",
+ "sdl3-sys",
+]
+
+[[package]]
+name = "sdl3-sys"
+version = "0.6.3+SDL-3.4.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c7adc59563535710602c8e7035297fd73d2506c0c61677f40aeb8917c0e86a01"
 
 [[package]]
 name = "semver"

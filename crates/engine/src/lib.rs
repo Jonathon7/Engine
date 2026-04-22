@@ -1,4 +1,5 @@
 pub mod lifecycle;
+pub mod pathfinding;
 
 pub struct Engine {
     running: bool,
@@ -14,7 +15,7 @@ impl Engine {
     }
 
     pub fn run(&mut self) {
-        self.running = true;
+        self.running = false;
         self.lifecycle.invoke_awake();
         self.lifecycle.invoke_start();
 
