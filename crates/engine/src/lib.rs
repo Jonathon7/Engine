@@ -1,5 +1,6 @@
 pub mod lifecycle;
 pub mod pathfinding;
+pub mod platform;
 
 pub struct Engine {
     running: bool,

@@ -1,5 +1,6 @@
 use engine::Engine;
 use engine::lifecycle::LifecycleCallbacks;
+use engine::pathfinding::{Point, astar};
 use std::sync::Mutex;
 use libloading::{Library, Symbol};
 use netcorehost::{nethost, pdcstr, pdcstring::PdCString};
@@ -34,6 +35,7 @@ fn main() {
 
     let mut engine = Engine::new(lifecycle_callbacks);
     engine.run();
+    test_pathfinding();
 }
 
 fn load_dotnet_runtime()
@@ -67,4 +69,29 @@ fn load_dotnet_runtime()
     ).unwrap();
 
     initialize();
+}
+
+fn test_pathfinding()
+{
+    let grid = vec![
+        vec![true,  true,  true,  true,  true],
+        vec![true,  false, false, false, false],
+        vec![true,  true,  true,  false, true],
+        vec![false, false, true,  false, true],
+        vec![true,  true,  true,  true,  true],
+    ];
+
+    let start = Point { x: 0, y: 0 };
+    let goal  = Point { x: 4, y: 4 };
+
+    match astar(&grid, start, goal) {
+        Some(path) => {
+            println!("Path found ({} steps):", path.len() - 1);
+            for p in &path {
+                print!("({},{}) ", p.x, p.y);
+            }
+            println!();
+        }
+        None => println!("No path found."),
+    }   
 }
