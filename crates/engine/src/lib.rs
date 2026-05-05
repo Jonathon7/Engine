@@ -1,5 +1,7 @@
 pub mod lifecycle;
 pub mod pathfinding;
+pub mod vehicle;
+pub mod traffic;
 pub mod platform;
 
 pub struct Engine {
