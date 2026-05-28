@@ -3,6 +3,7 @@ pub mod pathfinding;
 pub mod vehicle;
 pub mod traffic;
 pub mod platform;
+pub mod scripting;
 
 pub struct Engine {
     running: bool,

@@ -1,6 +1,3 @@
-//use std::ptr::{null, null_mut};
-// use std::ffi::CString;
-// use sdl3::render;
 use sdl3::pixels::Color;
 use sdl3::event::Event;
 use sdl3::keyboard::Keycode;
@@ -16,7 +13,6 @@ pub fn run_sdl() {
         .unwrap();
 
     let mut canvas = window.into_canvas();
-
 
     canvas.set_draw_color(Color::RGB(255, 255, 255));
     canvas.clear();

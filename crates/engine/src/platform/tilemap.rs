@@ -1,26 +1,24 @@
-use sdl3::render::WindowCanvas;
-use sdl3::render::FRect;
+use sdl3::render::{WindowCanvas, FRect, Texture};
 use sdl3::pixels::Color;
 use crate::platform::camera::{Camera};
-use crate::vehicle::{Vehicle};
-use crate::traffic::{SignalHead};
-use crate::traffic::{LightPhase};
+use crate::vehicle::{Vehicle, VEHICLE_WIDTH, VEHICLE_HEIGHT};
+use crate::traffic::{SignalHead, LightPhase};
 
 pub const MAP_DATA: &str = "\
-.............||.............
-....BB.......||.......B.....
-....BB.......||.......BB....
-.............||.............
-.............||.............
--------------+L-------------
-============L+++============
-============+++L============
--------------L+-------------
-.............||.............
-.............||.............
-.............||.............
-.............||.............
-.............|}............
+.............{^.............
+....BB.......v^.......B.....
+....BB.......v^.......BB....
+.............v^.............
+.............v^.............
+-------------vL-------------
+<<<<<<<<<<<<L++<<<<<<<<<<<<]
+[>>>>>>>>>>>>++L>>>>>>>>>>>>
+-------------L^-------------
+.............v^.............
+.............v^.............
+.............v^.............
+.............v^.............
+.............v}.............
 ............................
 ............................
 ............................
@@ -51,7 +49,10 @@ pub enum Tile {
     Grass,
     RoadH,
     RoadV,
-    RoadVSpawn,
+    RoadVNSpawn,
+    RoadVSSpawn,
+    RoadHESpawn,
+    RoadHWSpawn,
     RoadIntersect,
     Stoplight,
     Sidewalk,
@@ -72,7 +73,7 @@ impl IntoTileIndex for f32 {
     fn into_index(self) -> Option<usize> {
          if self.is_nan() {
              None
-         } else if self <= 0.0 {
+         } else if self < 0.0 {
              None
          } else {
              let index = (self / TILE_SIZE).floor() as usize;
@@ -103,11 +104,23 @@ impl Tilemap {
         Some(self.map[index_y][index_x])
     }
 
+    pub fn is_on_road<T: IntoTileIndex>(&self, x: T, y: T) -> bool {
+        let Some(tile) = self.get_tile(x, y) else { return false; };
+
+        use Tile::*;
+        match tile {
+            RoadH | RoadV | RoadVNSpawn | RoadVSSpawn | RoadHESpawn | RoadHWSpawn | RoadIntersect | Stoplight => {
+                return true;
+            },
+            _ => { return false; }
+        };
+    }
+
     pub fn is_in_bounds<T: IntoTileIndex>(&self, x: T, y: T) -> bool {
         let Some(index_x) = x.into_index() else { return false; };
         let Some(index_y) = y.into_index() else { return false; };
 
-        if index_x > MAP_WIDTH || index_y > MAP_HEIGHT {
+        if index_x >= MAP_WIDTH || index_y >= MAP_HEIGHT {
             return false;
         }
 
@@ -123,9 +136,12 @@ pub fn build_map() -> Vec<Vec<Tile>> {
                 '.' => Tile::Grass,
                 'B' => Tile::Building,
                 '-' => Tile::Sidewalk,
-                '=' => Tile::RoadH,
-                '|' => Tile::RoadV,
-                '}' => Tile::RoadVSpawn,
+                '>' | '<' => Tile::RoadH,
+                '^' | 'v' => Tile::RoadV,
+                '}' => Tile::RoadVNSpawn,
+                '{' => Tile::RoadVSSpawn,
+                '[' => Tile::RoadHESpawn,
+                ']' => Tile::RoadHWSpawn,
                 '+' => Tile::RoadIntersect,
                 'L' => Tile::Stoplight,
                 _ => Tile::Grass
@@ -141,14 +157,14 @@ fn draw_tile(canvas: &mut WindowCanvas, tile: Tile, screen_x: f32, screen_y: f32
             canvas.set_draw_color(Color::RGB(80, 140, 60));
             canvas.fill_rect(rect).unwrap();
         }
-        Tile::RoadH => {
+        Tile::RoadH | Tile::RoadHESpawn | Tile::RoadHWSpawn => {
             canvas.set_draw_color(Color::RGB(60, 60, 65));
             canvas.fill_rect(rect).unwrap();
             canvas.set_draw_color(Color::RGB(230, 220, 100));
-            // canvas.fill_rect(FRect::new(screen_x + 4.0, screen_y + 14.0, 8.0, 4.0)).unwrap();
+           // canvas.fill_rect(FRect::new(screen_x + 4.0, screen_y + 14.0, 8.0, 4.0)).unwrap();
             // canvas.fill_rect(FRect::new(screen_x + 20.0, screen_y + 14.0, 8.0, 4.0)).unwrap();
         }
-        Tile::RoadV | Tile::RoadVSpawn => {
+        Tile::RoadV | Tile::RoadVNSpawn | Tile::RoadVSSpawn => {
             canvas.set_draw_color(Color::RGB(60, 60, 65));
             canvas.fill_rect(rect).unwrap();
             canvas.set_draw_color(Color::RGB(230, 220, 100));
@@ -215,30 +231,28 @@ pub fn draw_visible_tiles(canvas: &mut WindowCanvas, map: &[Vec<Tile>], camera: 
     }
 }
 
-pub fn draw_vehicle(canvas: &mut WindowCanvas, vehicle: &Vehicle, camera: &Camera) {
+pub fn draw_vehicle(canvas: &mut WindowCanvas, vehicle: &Vehicle, texture: &Texture, camera: &Camera) {
     let (screen_x, screen_y) = camera.world_to_screen(vehicle.x, vehicle.y);
  
-    let (width, height) = if vehicle.is_vertical() { (16.0, 24.0) } else { (24.0, 14.0) };
-    if screen_x + width < 0.0 || screen_x > SCREEN_WIDTH as f32 || screen_y + height < 0.0 || screen_y > SCREEN_HEIGHT as f32 {
+    let (w, h) = (VEHICLE_WIDTH, VEHICLE_HEIGHT);
+    let radius = 24.0;
+
+    if screen_x + radius < 0.0 || screen_x - radius > SCREEN_WIDTH as f32
+        || screen_y + radius < 0.0 || screen_y - radius > SCREEN_HEIGHT as f32
+    {
         return;
     }
  
-    canvas.set_draw_color(vehicle.color);
-    canvas.fill_rect(FRect::new(screen_x, screen_y, width, height)).unwrap();
- 
-    canvas.set_draw_color(Color::RGB(40, 60, 80));
-    let windshield = if vehicle.is_vertical() {
-        if vehicle.velocity_y > 0.0 {
-            FRect::new(screen_x + 2.0, screen_y + 14.0, 12.0, 6.0)
-        } else {
-            FRect::new(screen_x + 2.0, screen_y + 4.0, 12.0, 6.0)
-        }
-    } else if vehicle.velocity_x > 0.0 {
-        FRect::new(screen_x + 14.0, screen_y + 2.0, 6.0, 10.0)
-    } else {
-        FRect::new(screen_x + 4.0, screen_y + 2.0, 6.0, 10.0)
-    };
-    canvas.fill_rect(windshield).unwrap();
+    let distance = FRect::new(screen_x - w / 2.0, screen_y - h / 2.0, w, h);
+
+    canvas.copy_ex(
+        texture,
+        None,           // src rect (full texture)
+        Some(distance),      // dest rect
+        vehicle.facing_angle, // rotation in degrees
+        None,           // center of rotation (None = center of dst)
+        false, false,   // flip horizontal, vertical
+    ).unwrap();
 }
 
 pub fn draw_traffic_signals(canvas: &mut WindowCanvas, traffic_signals: &Vec<(String, [SignalHead; 4])>, camera: &Camera) {

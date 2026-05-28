@@ -52,6 +52,7 @@ pub fn astar(grid: &Vec<Vec<bool>>, start: Point, goal: Point) -> Option<Vec<Poi
     g_cost.insert(start, 0);
     open.push(Node { point: start, f_cost: manhattan_distance(start, goal) });
 
+
     while let Some(Node { point, .. }) = open.pop() {
         if point == goal
         {
@@ -82,4 +83,5 @@ pub fn astar(grid: &Vec<Vec<bool>>, start: Point, goal: Point) -> Option<Vec<Poi
 
     return None;
 }
+
 
