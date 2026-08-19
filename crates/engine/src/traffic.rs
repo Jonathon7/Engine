@@ -26,10 +26,10 @@ impl TrafficSignals {
     pub fn new(map: &Vec<Vec<Tile>>) -> Self {
         let traffic_signal_sets: Rc<RefCell<Vec<(String, [SignalHead; 4])>>> = Rc::new(RefCell::new(Vec::new()));
         let signals_by_position_values: Rc<RefCell<HashMap<(usize, usize), (usize, usize)>>> = Rc::new(RefCell::new(HashMap::new()));
+        let mut intersection_count = 0;
         for (y, row) in map.iter().enumerate() {
             for (x, tile) in row.iter().enumerate() {
                 if *tile == Tile::Stoplight {
-
                     let mut signal_sets = traffic_signal_sets.borrow_mut();
                     let mut signals_by_position = signals_by_position_values.borrow_mut();
 
@@ -49,7 +49,8 @@ impl TrafficSignals {
                     signals_by_position.insert((east_signal_head.x, east_signal_head.y), (signal_sets.len(), 2));
                     signals_by_position.insert((west_signal_head.x, west_signal_head.y), (signal_sets.len(), 3));
 
-                    signal_sets.push((String::from("Main Intersection"), [north_signal_head, south_signal_head, east_signal_head, west_signal_head]));
+                    intersection_count += 1;
+                    signal_sets.push((String::from(format!("Intersection{intersection_count}")), [north_signal_head, south_signal_head, east_signal_head, west_signal_head]));
                 }
             }
         }

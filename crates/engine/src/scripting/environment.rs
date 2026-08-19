@@ -29,39 +29,47 @@ impl ScriptingEnvironment {
     }
 
     pub fn update(&mut self) {
-        let signal_set_idx: usize = get_signal_set_by_name(&self.traffic_signals.borrow(), "Main Intersection").unwrap();
+        let signal_set_idx1: usize = get_signal_set_by_name(&self.traffic_signals.borrow(), "Intersection1").unwrap();
+        let signal_set_idx2: usize = get_signal_set_by_name(&self.traffic_signals.borrow(), "Intersection2").unwrap();
         let mut signal_ref = self.traffic_signals.borrow_mut();
-        let signal_set = &mut signal_ref[signal_set_idx].1;
-        let light_configuration = self.phase.light_configuration();
 
-        match light_configuration.ns {
-            LightPhase::Red => {
-                set_phase(&mut signal_set[0], LightPhase::Red);
-                set_phase(&mut signal_set[1], LightPhase::Red);
-            },
-            LightPhase::Yellow => {
-                set_phase(&mut signal_set[0], LightPhase::Yellow);
-                set_phase(&mut signal_set[1], LightPhase::Yellow);
-            },
-            LightPhase::Green => {
-                set_phase(&mut signal_set[0], LightPhase::Green);
-                set_phase(&mut signal_set[1], LightPhase::Green);
+        let indices = vec![signal_set_idx1, signal_set_idx2];
+        // let indices = vec![signal_set_idx1];
+
+        for idx in indices {
+            let signal_set = &mut signal_ref[idx].1;
+
+            let light_configuration = self.phase.light_configuration();
+            match light_configuration.ns {
+                LightPhase::Red => {
+                    set_phase(&mut signal_set[0], LightPhase::Red);
+                    set_phase(&mut signal_set[1], LightPhase::Red);
+                },
+                LightPhase::Yellow => {
+                    set_phase(&mut signal_set[0], LightPhase::Yellow);
+                    set_phase(&mut signal_set[1], LightPhase::Yellow);
+                },
+                LightPhase::Green => {
+                    set_phase(&mut signal_set[0], LightPhase::Green);
+                    set_phase(&mut signal_set[1], LightPhase::Green);
+                }
             }
-        }
-       
-        match light_configuration.ew {
-            LightPhase::Red => {
-                set_phase(&mut signal_set[2], LightPhase::Red);
-                set_phase(&mut signal_set[3], LightPhase::Red);
-            },
-            LightPhase::Yellow => {
-                set_phase(&mut signal_set[2], LightPhase::Yellow);
-                set_phase(&mut signal_set[3], LightPhase::Yellow);
-            },
-            LightPhase::Green => {
-                set_phase(&mut signal_set[2], LightPhase::Green);
-                set_phase(&mut signal_set[3], LightPhase::Green);
+
+            match light_configuration.ew {
+                LightPhase::Red => {
+                    set_phase(&mut signal_set[2], LightPhase::Red);
+                    set_phase(&mut signal_set[3], LightPhase::Red);
+                },
+                LightPhase::Yellow => {
+                    set_phase(&mut signal_set[2], LightPhase::Yellow);
+                    set_phase(&mut signal_set[3], LightPhase::Yellow);
+                },
+                LightPhase::Green => {
+                    set_phase(&mut signal_set[2], LightPhase::Green);
+                    set_phase(&mut signal_set[3], LightPhase::Green);
+                }
             }
+
         }
 
         if self.phase.duration() <= self.timer.elapsed() {
@@ -114,9 +122,10 @@ impl Phase {
 
     pub fn duration(self) -> Duration {
         match self {
-            Phase::NsGreen | Phase::EwGreen => Duration::from_secs(3),
+            Phase::NsGreen => Duration::from_secs(6),
+            Phase::EwGreen => Duration::from_secs(6),
             Phase::NsYellow | Phase::EwYellow => Duration::from_secs(1),
-            Phase::AllRedToNs | Phase::AllRedToEw => Duration::from_secs(1)
+            Phase::AllRedToNs | Phase::AllRedToEw => Duration::from_secs(2)
         }
     }
 }
